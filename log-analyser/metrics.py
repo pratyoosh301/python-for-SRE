@@ -1,6 +1,11 @@
 import psutil
 import socket
 from datetime import datetime
+from pathlib import Path
+import json
+
+desktop = Path.home() / "Desktop"
+log_file = desktop / "metric.log"
 
 hostname = socket.gethostname()
 
@@ -16,10 +21,14 @@ status = "ok"
 
 if cpu>cpu_threshhold or disk>disk_threshhold or ram>ram_threshold:
     status = "not ok"
-print({
+result = {
     "host": hostname,
     "cpu": cpu,
-    "ram": ram, 
+    "ram": ram,
     "disk": disk,
     "status": status,
-})    
+}
+   
+
+with open('log_file', "a") as f:
+    f.write(json.dumps(result) + "\n")
